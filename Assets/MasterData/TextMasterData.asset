@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab98ab2aed6c4aa47a25bcf3898f189c, type: 3}
+  m_Name: TextMasterData
+  m_EditorClassIdentifier: 
+  _texts:
+  - _id: 1
+    _textKey: ui_equip
+    _jp: "\u88C5\u5099"
+    _en: Equip
+  - _id: 2
+    _textKey: ui_remove
+    _jp: "\u5916\u3059"
+    _en: Remove
