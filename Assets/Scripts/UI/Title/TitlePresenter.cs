@@ -29,6 +29,6 @@ public class TitlePresenter : MonoBehaviour
     void OnStartButton(Unit unit)
     {
         GameManager.Instance.SetStage("Stage1");
-        GameSceneManager.Instance.LoadScene("Game");
+        GameSceneManager.Instance.LoadSceneChange("Game");
     }
 }

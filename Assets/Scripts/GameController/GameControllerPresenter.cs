@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 public class GameControllerPresenter : MonoBehaviour
 {
+    [SerializeField] InGameUIPresenter _inGameUIPresenter;
+
     GameInputs _gameInputs;
 
     public bool IsInitialized { get; private set; } = false;
 
     private void Start()
+    {
+        Initialize().Forget();
+    }
+
+    async UniTask Initialize()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -22,11 +30,16 @@ public class GameControllerPresenter : MonoBehaviour
         _gameInputs.Debug.GameFinish.started += OnDebugGameFinish;
 #endif
 
-        GameSceneManager.Instance.LoadScene(GameManager.Instance.StageName, LoadSceneMode.Additive);
+        await GameSceneManager.Instance.LoadSceneAsync(GameManager.Instance.StageName, GameSceneManager.LoadSceneType.Additive);
+        await UniTask.WaitUntil(() => _inGameUIPresenter.IsInitialized);
 
         _gameInputs.Enable();
 
         IsInitialized = true;
+
+        GameSceneManager.Instance.SetIsLoadComplete(true);
+
+        await UniTask.CompletedTask;
     }
 
 #if DEBUG

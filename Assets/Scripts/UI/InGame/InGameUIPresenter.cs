@@ -8,6 +8,8 @@ public class InGameUIPresenter : MonoBehaviour
 {
     PlayerUIPresenter _playerUIPresenter;
 
+    public bool IsInitialized { get; private set; } = false;
+
     [Inject]
     void Construct(PlayerUIPresenter playerUIPresenter)
     {
@@ -24,5 +26,7 @@ public class InGameUIPresenter : MonoBehaviour
         await UniTask.WaitUntil(() => GameController.Instance != null && MasterDataManager.Instance != null && TextManager.Instance != null);
 
         await _playerUIPresenter.Initialize();
+
+        IsInitialized = true;
     }
 }
