@@ -9,5 +9,5 @@ public class TitleView : MonoBehaviour
 {
     [SerializeField] Button _startButton;
 
-    public IObservable<Unit> StartButtonObservable => _startButton.OnClickAsObservable();
+    public IObservable<Unit> StartButtonObservable => _startButton.OnClickAsObservable().ThrottleFirst(TimeSpan.FromSeconds(GameSceneManager.Instance.AnimationSpeed));
 }

@@ -18,6 +18,7 @@ public class GameSceneManager : MonoBehaviour
 
     [SerializeField] CanvasGroup _canvasGroup;
     [SerializeField] float _animationSpeed = 1.0f;
+    public float AnimationSpeed => _animationSpeed;
 
     public bool IsSceneChange { get; private set; } = false;
 
