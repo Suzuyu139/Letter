@@ -5,14 +5,23 @@ using UniRx;
 using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using VContainer;
 
 public class GameControllerPresenter : MonoBehaviour
 {
     [SerializeField] InGameUIPresenter _inGameUIPresenter;
 
+    GameControllerMakeStagePresenter _makeStagePresenter;
+
     GameInputs _gameInputs;
 
     public bool IsInitialized { get; private set; } = false;
+
+    [Inject]
+    void Construct(GameControllerMakeStagePresenter makeStagePresenter)
+    {
+        _makeStagePresenter = makeStagePresenter;
+    }
 
     private void Start()
     {
@@ -31,6 +40,7 @@ public class GameControllerPresenter : MonoBehaviour
 #endif
 
         await GameSceneManager.Instance.LoadSceneAsync(GameManager.Instance.StageName, GameSceneManager.LoadSceneType.Additive);
+        await UniTask.WaitUntil(() => _makeStagePresenter.IsInitialized);
         await UniTask.WaitUntil(() => _inGameUIPresenter.IsInitialized);
 
         _gameInputs.Enable();

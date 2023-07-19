@@ -6,5 +6,7 @@ public class GameControllerLifetimeScope : LifetimeScope
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterComponent(this.GetComponent<GameControllerModel>()).AsImplementedInterfaces();
+
+        builder.RegisterComponent(this.GetComponent<GameControllerMakeStagePresenter>()).AsImplementedInterfaces();
     }
 }
