@@ -47,3 +47,4 @@ MonoBehaviour:
   _itemMasterData: {fileID: 11400000, guid: 431ad33a43e345f41a9b1a645d7c0ded, type: 2}
   _playerMasterData: {fileID: 11400000, guid: 3f33ff0f5544ae040b68555eac2bc6ee, type: 2}
   _textMasterData: {fileID: 11400000, guid: 947adf4fd2c574b4f999ab97b09c114f, type: 2}
+  _stageMasterData: {fileID: 11400000, guid: 0b93e04b7a0f01548826493fbea6ba1b, type: 2}

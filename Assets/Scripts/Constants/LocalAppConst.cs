@@ -12,5 +12,7 @@ public class LocalAppConst
         Start,
         Goal,
         Way,
+        Key,
+        Empty,
     }
 }

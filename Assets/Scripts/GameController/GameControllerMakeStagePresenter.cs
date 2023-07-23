@@ -5,6 +5,7 @@ using VContainer;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using System.Text;
+using System.Linq;
 
 public class GameControllerMakeStagePresenter : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class GameControllerMakeStagePresenter : MonoBehaviour
 
     Vector2Int _currentPos = new Vector2Int(0, 0);
     Vector2Int _startPos = new Vector2Int(0, 0);
+    HashSet<Vector2Int> _roomPlans = new HashSet<Vector2Int>();
 
     [Inject]
     void Construct(GameControllerModel model)
@@ -59,43 +61,43 @@ public class GameControllerMakeStagePresenter : MonoBehaviour
 
     async UniTask CreateStage()
     {
-        Vector2Int startPos = new Vector2Int(0, 0);
+        Vector2Int wayStartPos = new Vector2Int(0, 0);
 
-        // スタートの位置を決める
-        startPos.y = Random.Range(1, 8);
+        // 道のスタートの位置を決める
+        wayStartPos.y = Random.Range(1, 8);
         await UniTask.WaitUntil(() =>
         {
             bool isStartX = false;
 
-            startPos.x = Random.Range(1, 8);
-            isStartX = !((startPos.y == 4 || startPos.y == 5) && (startPos.x == 4 || startPos.x == 5));
+            wayStartPos.x = Random.Range(1, 8);
+            isStartX = !((wayStartPos.y == 4 || wayStartPos.y == 5) && (wayStartPos.x == 4 || wayStartPos.x == 5));
 
             return isStartX;
         });
-        _model.SetStageData(startPos.y, startPos.x, (int)LocalAppConst.StageDataType.Way);
-        _startPos = startPos;
-        _currentPos = startPos;
+        _model.SetStageData(wayStartPos.y, wayStartPos.x, (int)LocalAppConst.StageDataType.Way);
+        _startPos = wayStartPos;
+        _currentPos = wayStartPos;
 
         // 位置的にx,yそれぞれスタート位置が真ん中の列にあったらずらす
         WayDirectionType way = WayDirectionType.None;
-        if(startPos.y == 4 || startPos.y == 5)
+        if(wayStartPos.y == 4 || wayStartPos.y == 5)
         {
-            if(startPos.x < 4)
+            if(wayStartPos.x < 4)
             {
                 way = WayDirectionType.Up;
             }
-            else if (startPos.x > 5)
+            else if (wayStartPos.x > 5)
             {
                 way= WayDirectionType.Down;
             }
         }
-        else if(startPos.x == 4 || startPos.x == 5)
+        else if(wayStartPos.x == 4 || wayStartPos.x == 5)
         {
-            if (startPos.y < 4)
+            if (wayStartPos.y < 4)
             {
                 way = WayDirectionType.Right;
             }
-            else if (startPos.y > 5)
+            else if (wayStartPos.y > 5)
             {
                 way = WayDirectionType.Left;
             }
@@ -142,6 +144,70 @@ public class GameControllerMakeStagePresenter : MonoBehaviour
             way = WayDirectionType.Up;
         }
         BuildStageWay(way, true);
+
+        // 道沿いの空いた場所を取得
+        for(int y = 0; y < _model.StageData.Length; y++)
+        {
+            for(int x = 0; x < _model.StageData[y].Length; x++)
+            {
+                if(_model.StageData[y][x] != (int)LocalAppConst.StageDataType.Way)
+                {
+                    continue;
+                }
+
+                if (_model.StageData[y - 1][x] == (int)LocalAppConst.StageDataType.None)
+                {
+                    _roomPlans.Add(new Vector2Int(x, y - 1));
+                }
+                if (_model.StageData[y][x - 1] == (int)LocalAppConst.StageDataType.None)
+                {
+                    _roomPlans.Add(new Vector2Int(x - 1, y));
+                }
+                if (_model.StageData[y][x + 1] == (int)LocalAppConst.StageDataType.None)
+                {
+                    _roomPlans.Add(new Vector2Int(x + 1, y));
+                }
+                if (_model.StageData[y + 1][x] == (int)LocalAppConst.StageDataType.None)
+                {
+                    _roomPlans.Add(new Vector2Int(x, y + 1));
+                }
+            }
+        }
+
+        // スタート位置を決める
+        var vacantRooms = _roomPlans.ToList();
+        var startPosIndex = Random.Range(0, _roomPlans.Count);
+        var startPos = vacantRooms[startPosIndex];
+        _model.SetStageData(startPos.y, startPos.x, (int)LocalAppConst.StageDataType.Start);
+        vacantRooms.Remove(startPos);
+        _roomPlans.Remove(startPos);
+
+        // ゴール位置を決める
+        var endPosIndex = Random.Range(0, _roomPlans.Count);
+        var endPos = vacantRooms[endPosIndex];
+        _model.SetStageData(endPos.y, endPos.x, (int)LocalAppConst.StageDataType.Goal);
+        vacantRooms.Remove(endPos);
+        _roomPlans.Remove(endPos);
+
+        // 鍵の部屋を決める
+        for(int i = 0; i < 3; i++)
+        {
+            var keyPosIndex = Random.Range(0, _roomPlans.Count);
+            var keyPos = vacantRooms[keyPosIndex];
+            _model.SetStageData(keyPos.y, keyPos.x, (int)LocalAppConst.StageDataType.Key);
+            vacantRooms.Remove(keyPos);
+            _roomPlans.Remove(keyPos);
+        }
+
+        // 特に何もない部屋を決める
+        for (int i = 0; i < 5; i++)
+        {
+            var emptyPosIndex = Random.Range(0, _roomPlans.Count);
+            var emptyPos = vacantRooms[emptyPosIndex];
+            _model.SetStageData(emptyPos.y, emptyPos.x, (int)LocalAppConst.StageDataType.Empty);
+            vacantRooms.Remove(emptyPos);
+            _roomPlans.Remove(emptyPos);
+        }
 
         await UniTask.CompletedTask;
     }

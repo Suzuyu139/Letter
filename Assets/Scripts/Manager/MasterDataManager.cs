@@ -15,6 +15,9 @@ public class MasterDataManager : MonoBehaviour
     [SerializeField] TextMasterData _textMasterData = null;
     public TextMasterData TextMasterData => _textMasterData;
 
+    [SerializeField] StageMasterData _stageMasterData = null;
+    public StageMasterData StageMasterData => _stageMasterData;
+
     private void Awake()
     {
         Instance = this;
