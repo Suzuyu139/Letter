@@ -10,7 +10,6 @@ public class GameController : MonoBehaviour
     GameControllerModel _model;
 
     public GameObject Player { get; private set; }
-    public int[][] StageData { get; private set; }
 
     PoolPresenter _itemPool = null;
     public PoolPresenter ItemPool => _itemPool;
@@ -24,7 +23,6 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         _itemPool = Instantiate(_model.ItemPoolPrefab).GetComponent<PoolPresenter>();
-        StageData = _model.StageData;
 
         Instance = this;
     }

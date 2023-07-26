@@ -7,4 +7,5 @@ public class TagConstants
     public static readonly string Weapon = "Weapon";
     public static readonly string PlayerEquipCollision = "PlayerEquipCollision";
     public static readonly string PlayerUI = "PlayerUI";
+    public static readonly string Stage = "Stage";
 }

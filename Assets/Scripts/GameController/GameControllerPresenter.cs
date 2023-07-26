@@ -11,6 +11,7 @@ public class GameControllerPresenter : MonoBehaviour
 {
     [SerializeField] InGameUIPresenter _inGameUIPresenter;
 
+    GameControllerModel _model;
     GameControllerMakeStagePresenter _makeStagePresenter;
 
     GameInputs _gameInputs;
@@ -18,8 +19,9 @@ public class GameControllerPresenter : MonoBehaviour
     public bool IsInitialized { get; private set; } = false;
 
     [Inject]
-    void Construct(GameControllerMakeStagePresenter makeStagePresenter)
+    void Construct(GameControllerModel model, GameControllerMakeStagePresenter makeStagePresenter)
     {
+        _model = model;
         _makeStagePresenter = makeStagePresenter;
     }
 
@@ -41,6 +43,8 @@ public class GameControllerPresenter : MonoBehaviour
 
         await GameSceneManager.Instance.LoadSceneAsync(GameManager.Instance.StageName, GameSceneManager.LoadSceneType.Additive);
         await UniTask.WaitUntil(() => _makeStagePresenter.IsInitialized);
+        var stage = GameObject.FindGameObjectWithTag(TagConstants.Stage).GetComponent<CreateStagePresenter>();
+        await stage.CreateStage(_model.StageData);
         await UniTask.WaitUntil(() => _inGameUIPresenter.IsInitialized);
 
         _gameInputs.Enable();

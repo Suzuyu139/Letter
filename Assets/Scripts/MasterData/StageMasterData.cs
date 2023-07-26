@@ -17,4 +17,16 @@ public class StageMasterData : ScriptableObject
 
     [SerializeField] List<StageData> _stages = new List<StageData>();
     public List<StageData> Stages => _stages;
+
+    public GameObject GetStageObject(int id)
+    {
+        foreach (var stage in _stages)
+        {
+            if(id == stage.Id)
+            {
+                return stage.StageObject;
+            }
+        }
+        return null;
+    }
 }
