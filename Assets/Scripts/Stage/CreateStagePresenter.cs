@@ -69,6 +69,29 @@ public class CreateStagePresenter : MonoBehaviour
                         SetActiveWall(walls, StageWallType.Right, false);
                     }
                 }
+                else
+                {
+                    float angleY = 0.0f;
+                    if ((y - 1) >= 0 && stageData[y - 1][x] == (int)LocalAppConst.StageDataType.Way)
+                    {
+                        angleY = 0.0f;
+                    }
+                    else if ((y + 1) < stageData.Length && stageData[y + 1][x] == (int)LocalAppConst.StageDataType.Way)
+                    {
+                        angleY = 180.0f;
+                    }
+                    else if ((x - 1) >= 0 && stageData[y][x - 1] == (int)LocalAppConst.StageDataType.Way)
+                    {
+                        angleY = 90.0f;
+                    }
+                    else if ((x + 1) < stageData[y].Length && stageData[y][x + 1] == (int)LocalAppConst.StageDataType.Way)
+                    {
+                        angleY = -90.0f;
+                    }
+
+                    var angle = obj.transform.eulerAngles;
+                    obj.transform.eulerAngles = new Vector3(angle.x, angleY, angle.z);
+                }
             }
         }
 
