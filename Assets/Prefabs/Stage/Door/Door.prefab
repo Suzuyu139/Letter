@@ -32,7 +32,7 @@ Transform:
   - {fileID: 459196360072337045}
   - {fileID: 3408241958959767691}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3031533482844787336
 MonoBehaviour:
@@ -46,6 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4c3af58896efc4b98ec09c37d38ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rightDoorTransform: {fileID: 459196360072337045}
+  _leftDoorTransform: {fileID: 3408241958959767691}
+  _speed: 0.5
+  _movePosX: 3.05
 --- !u!1001 &4898015408988560200
 PrefabInstance:
   m_ObjectHideFlags: 0
