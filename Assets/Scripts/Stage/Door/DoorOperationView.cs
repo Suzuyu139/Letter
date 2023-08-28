@@ -12,8 +12,10 @@ public class DoorOperationView : MonoBehaviour
     [Space(10)]
     [SerializeField] DoorType _doorType;
 
-    public void Initialize()
+    void Start()
     {
+        _doorView.Initialize();
+
         switch (_doorType)
         {
             case DoorType.Auto:
@@ -35,7 +37,7 @@ public class DoorOperationView : MonoBehaviour
 
     void OnAutoDoorTriggerEnter(Collider collider)
     {
-        _doorView.Open();
+        _doorView.Open(true);
     }
 }
 

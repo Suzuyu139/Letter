@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UniRx;
+using UniRx.Triggers;
+using UniRx.Diagnostics;
 
 public class DoorView : MonoBehaviour
 {
     [SerializeField] Transform _rightDoorTransform;
     [SerializeField] Transform _leftDoorTransform;
+    [Header("ƒhƒA‚ÌÝ’è")]
     [SerializeField] float _speed;
     [SerializeField] float _movePosX;
+    [SerializeField] float _autoClose;
 
     public bool IsInitialized { get; private set; } = false;
     public bool IsOpen { get; private set; } = false;
 
     float _initRightDoorPosX = 0.0f;
     float _initLeftDoorPosX = 0.0f;
+    float _autoCloseTimer = 0.0f;
 
     public void Initialize()
     {
@@ -26,7 +32,22 @@ public class DoorView : MonoBehaviour
         _initRightDoorPosX = _rightDoorTransform.localPosition.x;
         _initLeftDoorPosX = _leftDoorTransform.localPosition.x;
 
+        this.UpdateAsObservable().Subscribe(OnUpdate).AddTo(gameObject);
+
         IsInitialized = true;
+    }
+
+    void OnUpdate(Unit unit)
+    {
+        if(IsOpen && _autoCloseTimer > 0.0f)
+        {
+            _autoCloseTimer -= Time.deltaTime;
+            if( _autoCloseTimer <= 0.0f)
+            {
+                _autoCloseTimer = 0.0f;
+                Close();
+            }
+        }
     }
 
     public void Open(bool isAutoClose = false)
@@ -46,10 +67,7 @@ public class DoorView : MonoBehaviour
 
         if (isAutoClose)
         {
-            DOVirtual.DelayedCall(5.0f, () =>
-            {
-                Close();
-            });
+            _autoCloseTimer = _autoClose;
         }
     }
 
@@ -66,6 +84,6 @@ public class DoorView : MonoBehaviour
 
         IsOpen = false;
         _rightDoorTransform.DOLocalMoveX(_initRightDoorPosX, _speed);
-        _leftDoorTransform.DOLocalMoveX(-_initLeftDoorPosX, _speed);
+        _leftDoorTransform.DOLocalMoveX(_initLeftDoorPosX, _speed);
     }
 }

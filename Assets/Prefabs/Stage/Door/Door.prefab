@@ -49,7 +49,8 @@ MonoBehaviour:
   _rightDoorTransform: {fileID: 459196360072337045}
   _leftDoorTransform: {fileID: 3408241958959767691}
   _speed: 0.5
-  _movePosX: 3.05
+  _movePosX: 3.5
+  _autoClose: 5
 --- !u!1001 &4898015408988560200
 PrefabInstance:
   m_ObjectHideFlags: 0
