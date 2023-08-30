@@ -9,6 +9,8 @@ public class CreateStagePresenter : MonoBehaviour
 {
     public async UniTask CreateStage(int[][] stageData)
     {
+        var myTransform = this.transform;
+
         await UniTask.WaitUntil(() => MasterDataManager.Instance != null);
 
         for(int y = 0; y < stageData.Length; y++)
@@ -39,16 +41,13 @@ public class CreateStagePresenter : MonoBehaviour
                     case (int)LocalAppConst.StageDataType.Key:
                         stageObj = MasterDataManager.Instance.StageMasterData.GetStageObject(5005);
                         break;
-                }
-
-                if(stageObj == null)
-                {
-                    Debug.LogError($"ステージオブジェクトが見つかりませんでした。StageData : {(LocalAppConst.StageDataType)stageData[y][x]}");
-                    continue;
+                    default:
+                        Debug.LogError($"ステージオブジェクトが見つかりませんでした。StageData : {(LocalAppConst.StageDataType)stageData[y][x]}");
+                        continue;
                 }
 
                 var obj = Instantiate(stageObj, worldPos, Quaternion.identity);
-                obj.transform.SetParent(this.transform);
+                obj.transform.SetParent(myTransform);
                 if (stageData[y][x] == (int)LocalAppConst.StageDataType.Way)
                 {
                     var walls = obj.GetComponentsInChildren<StageWallView>();

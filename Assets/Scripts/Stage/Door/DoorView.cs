@@ -58,6 +58,7 @@ public class DoorView : MonoBehaviour
         }
         if (IsOpen)
         {
+            _autoCloseTimer = _autoClose;
             return;
         }
 
