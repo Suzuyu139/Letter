@@ -55,7 +55,7 @@ public class CreateStagePresenter : MonoBehaviour
                     {
                         SetActiveWall(walls, StageWallType.Front, false);
                     }
-                    if(stageData[y + 1][x] != (int)LocalAppConst.StageDataType.None)
+                    if (stageData[y + 1][x] != (int)LocalAppConst.StageDataType.None)
                     {
                         SetActiveWall(walls, StageWallType.Back, false);
                     }
