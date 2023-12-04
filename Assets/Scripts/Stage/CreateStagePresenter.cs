@@ -7,6 +7,8 @@ using Cysharp.Threading.Tasks;
 
 public class CreateStagePresenter : MonoBehaviour
 {
+    List<(Vector2Int Pos, Transform Tf, LocalAppConst.StageDataType Data)> _stageDatas = new List<(Vector2Int, Transform, LocalAppConst.StageDataType)> ();
+
     public async UniTask CreateStage(int[][] stageData)
     {
         var myTransform = this.transform;
@@ -91,6 +93,8 @@ public class CreateStagePresenter : MonoBehaviour
                     var angle = obj.transform.eulerAngles;
                     obj.transform.eulerAngles = new Vector3(angle.x, angleY, angle.z);
                 }
+
+                _stageDatas.Add((new Vector2Int(x, y), obj.transform, (LocalAppConst.StageDataType)stageData[y][x]));
             }
         }
 
